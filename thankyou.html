@@ -1,0 +1,91 @@
+<!--
+Program name: thankyou.html
+Author: Student Name
+Date created: 02/27/2026
+Date last edited: 02/27/2026
+Version: 1.0
+Description: Thank You confirmation page shown after patient registration
+             form is submitted successfully.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCare Plus – Thank You</title>
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+
+<!-- HEADER / BANNER -->
+<div id="banner">
+  <div id="banner-left">
+    <svg id="logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-label="MedCare Plus logo">
+      <circle cx="30" cy="30" r="28" fill="#ffffff" stroke="#c8e6c9" stroke-width="2"/>
+      <rect x="24" y="12" width="12" height="36" rx="3" fill="#e53935"/>
+      <rect x="12" y="24" width="36" height="12" rx="3" fill="#e53935"/>
+    </svg>
+    <div id="brand-text">
+      <span id="brand-name">MedCare<span class="brand-accent">Plus</span></span>
+      <span id="brand-tagline">Your Health. Our Priority.</span>
+    </div>
+  </div>
+  <div id="banner-right">
+    <span id="dynamic-date"></span>
+    <span id="banner-sub">Patient Registration Portal</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content" style="text-align:center; padding: 60px 40px;">
+  <h1>🎉 Thank You for Your Submission!</h1>
+  <p style="font-size:1.1rem; color:#546e7a; margin-top:18px; max-width:520px; margin-left:auto; margin-right:auto;">
+    Your patient registration has been received. A member of our team will review
+    your information and contact you shortly to confirm your account.
+  </p>
+  <p style="margin-top:30px;">
+    <a href="patient-form.html">← Return to Registration Form</a>
+  </p>
+</div>
+
+<!-- FOOTER -->
+<div id="footer">
+  <div id="footer-left">
+    <strong>MedCare<span class="brand-accent">Plus</span></strong><br />
+    PO Box 18881<br />
+    Sugar Land, TX &nbsp;77496
+  </div>
+  <div id="footer-center">
+    <button type="button" id="btn-contact" onclick="alert('Contact us at info@medcareplus.com or call (713) 555-0100')">
+      📧 Contact Us
+    </button>
+  </div>
+  <div id="footer-right">
+    <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
+    <a href="https://www.twitter.com" target="_blank" rel="noopener">Twitter / X</a> |
+    <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["January","February","March","April","May","June",
+                  "July","August","September","October","November","December"];
+    var now    = new Date();
+    var day    = days[now.getDay()];
+    var month  = months[now.getMonth()];
+    var date   = now.getDate();
+    var year   = now.getFullYear();
+    var suffix = "th";
+    if (date === 1 || date === 21 || date === 31) suffix = "st";
+    else if (date === 2 || date === 22) suffix = "nd";
+    else if (date === 3 || date === 23) suffix = "rd";
+    document.getElementById("dynamic-date").textContent =
+      day + ", " + month + " " + date + suffix + ", " + year;
+  })();
+</script>
+
+<!-- end of thankyou.html -->
+</body>
+</html>
