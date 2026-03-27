@@ -1,0 +1,668 @@
+/*
+  Program name: style.css
+  Author: Ryan Alexander Rodriguez
+  Date created: 02/27/2026
+  Date last edited: 03/27/2026
+  Version: 2.0
+  Description: External stylesheet for MedCare Plus Patient Registration Form.
+               HW2 additions: review panel styles, error message styles,
+               side-by-side page wrapper layout, review button styles.
+*/
+
+/* ============================================================
+   GOOGLE FONTS IMPORT
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES (variables)
+   ============================================================ */
+:root {
+  --clr-bg:           #eef4f0;
+  --clr-banner-start: #1a3c34;
+  --clr-banner-end:   #2e7d52;
+  --clr-accent:       #e53935;
+  --clr-accent2:      #43a047;
+  --clr-card:         #ffffff;
+  --clr-border:       #b2dfdb;
+  --clr-heading:      #1a3c34;
+  --clr-text:         #263238;
+  --clr-label:        #37474f;
+  --clr-footer-bg:    #1a3c34;
+  --clr-footer-text:  #cfd8dc;
+  --clr-error:        #c62828;
+  --clr-error-bg:     #ffebee;
+  --clr-pass:         #2e7d32;
+  --clr-pass-bg:      #e8f5e9;
+  --font-display:     'Playfair Display', Georgia, serif;
+  --font-body:        'Source Sans 3', 'Segoe UI', sans-serif;
+  --radius:           8px;
+  --shadow:           0 2px 12px rgba(0,0,0,0.09);
+}
+
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* TAG selector – body */
+body {
+  font-family:      var(--font-body);
+  font-size:        15px;
+  font-weight:      400;
+  color:            var(--clr-text);
+  background-color: var(--clr-bg);
+  background-image: radial-gradient(circle at 20% 50%, #c8e6c930 0%, transparent 55%),
+                    radial-gradient(circle at 80% 20%, #a5d6a730 0%, transparent 45%);
+  line-height:      1.6;
+  min-height:       100vh;
+}
+
+/* ============================================================
+   BANNER  (id selector)
+   ============================================================ */
+#banner {
+  display:          flex;
+  justify-content:  space-between;
+  align-items:      center;
+  background:       linear-gradient(135deg, var(--clr-banner-start), var(--clr-banner-end));
+  color:            #ffffff;
+  padding:          18px 32px;
+  box-shadow:       0 3px 14px rgba(0,0,0,0.25);
+  flex-wrap:        wrap;
+  gap:              12px;
+}
+
+#banner-left {
+  display:     flex;
+  align-items: center;
+  gap:         16px;
+}
+
+/* TAG selector – svg */
+svg#logo {
+  width:  64px;
+  height: 64px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+  flex-shrink: 0;
+}
+
+#brand-text {
+  display:        flex;
+  flex-direction: column;
+}
+
+/* ID selector */
+#brand-name {
+  font-family:    var(--font-display);
+  font-size:      2rem;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  line-height:    1;
+}
+
+/* CLASS selector */
+.brand-accent {
+  color: #a5d6a7;
+}
+
+#brand-tagline {
+  font-size:      0.78rem;
+  font-weight:    300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity:        0.85;
+  margin-top:     3px;
+}
+
+#banner-right {
+  display:        flex;
+  flex-direction: column;
+  align-items:    flex-end;
+  gap:            4px;
+}
+
+/* ID selector */
+#dynamic-date {
+  font-family:    var(--font-display);
+  font-size:      1rem;
+  font-weight:    600;
+  letter-spacing: 0.3px;
+}
+
+#banner-sub {
+  font-size:      0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity:        0.75;
+}
+
+/* ============================================================
+   PAGE WRAPPER – side-by-side layout for form + review panel
+   (class selector)
+   ============================================================ */
+#page-wrapper {
+  display:        flex;
+  flex-wrap:      wrap;
+  gap:            24px;
+  max-width:      1300px;
+  margin:         28px auto;
+  padding:        0 16px;
+  align-items:    flex-start;
+}
+
+/* ============================================================
+   MAIN CONTENT (id selector)
+   ============================================================ */
+#main-content {
+  flex:          1 1 600px;
+  background:    var(--clr-card);
+  border-radius: var(--radius);
+  box-shadow:    var(--shadow);
+  padding:       36px 44px 44px;
+  min-width:     320px;
+}
+
+/* TAG selector – h1 */
+h1 {
+  font-family:   var(--font-display);
+  font-size:     1.85rem;
+  color:         var(--clr-heading);
+  margin-bottom: 6px;
+}
+
+/* CLASS selector */
+.form-intro {
+  color:         #546e7a;
+  font-size:     0.88rem;
+  margin-bottom: 28px;
+}
+
+/* CLASS selector */
+.req-star {
+  color:       var(--clr-accent);
+  font-weight: 700;
+}
+
+/* TAG selector – h2 */
+h2.section-heading {
+  font-family:    var(--font-display);
+  font-size:      1.15rem;
+  color:          #ffffff;
+  background:     linear-gradient(90deg, var(--clr-banner-start), var(--clr-accent2));
+  padding:        8px 16px;
+  border-radius:  var(--radius);
+  margin:         28px 0 14px;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   FORM TABLE  (class selector)
+   ============================================================ */
+.form-table {
+  width:           100%;
+  border-collapse: separate;
+  border-spacing:  0 10px;
+}
+
+/* CLASS selector */
+.label-cell {
+  font-family:    var(--font-body);
+  font-weight:    600;
+  color:          var(--clr-label);
+  font-size:      0.88rem;
+  padding-right:  12px;
+  white-space:    nowrap;
+  vertical-align: middle;
+}
+
+/* CLASS selector */
+.input-cell {
+  padding-right:  20px;
+  vertical-align: middle;
+}
+
+/* TAG selectors – inputs, selects, textareas */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+  font-family:   var(--font-body);
+  font-size:     0.9rem;
+  color:         var(--clr-text);
+  border:        1.5px solid var(--clr-border);
+  border-radius: 5px;
+  padding:       7px 10px;
+  background:    #f9fbe7;
+  transition:    border-color 0.2s, box-shadow 0.2s;
+  width:         100%;
+}
+
+/* NAME selector – state dropdown */
+select[name="state"] {
+  width:     auto;
+  min-width: 160px;
+}
+
+/* Pseudo-class selectors – focus */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  outline:      none;
+  border-color: var(--clr-accent2);
+  box-shadow:   0 0 0 3px rgba(67,160,71,0.18);
+  background:   #ffffff;
+}
+
+/* Pseudo-class selector – invalid (after user has interacted) */
+input:invalid:not(:placeholder-shown),
+select:invalid {
+  border-color: var(--clr-accent);
+}
+
+/* TAG selector – textarea */
+textarea {
+  resize:      vertical;
+  line-height: 1.5;
+}
+
+/* CLASS selector */
+.radio-label {
+  margin-right:  20px;
+  font-size:     0.9rem;
+  cursor:        pointer;
+  display:       inline-flex;
+  align-items:   center;
+  gap:           5px;
+}
+
+/* CLASS selector */
+.checkbox-group {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       10px 24px;
+}
+
+/* TAG selector */
+.checkbox-group label {
+  font-size:   0.9rem;
+  cursor:      pointer;
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+}
+
+/* CLASS selector – slider */
+.slider-wrap {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+}
+
+.slider-label {
+  font-weight: 600;
+  font-size:   0.85rem;
+  color:       var(--clr-label);
+}
+
+/* TAG selector */
+input[type="range"] {
+  -webkit-appearance: none;
+  width:        260px;
+  height:       6px;
+  border-radius: 4px;
+  background:   linear-gradient(to right, var(--clr-accent2), var(--clr-accent));
+  border:       none;
+  cursor:       pointer;
+  padding:      0;
+}
+
+/* Pseudo-element selector */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width:         20px;
+  height:        20px;
+  border-radius: 50%;
+  background:    var(--clr-banner-start);
+  border:        2px solid #fff;
+  box-shadow:    0 1px 4px rgba(0,0,0,0.3);
+  cursor:        pointer;
+}
+
+/* CLASS selector */
+.slider-value {
+  font-weight: 700;
+  font-size:   1rem;
+  color:       var(--clr-banner-start);
+  min-width:   120px;
+  text-align:  left;
+}
+
+/* ============================================================
+   ERROR MESSAGES  (class selector)
+   ============================================================ */
+.err-msg {
+  display:     none;
+  color:       var(--clr-error);
+  font-size:   0.78rem;
+  font-weight: 600;
+  margin-top:  3px;
+  background:  var(--clr-error-bg);
+  padding:     2px 6px;
+  border-radius: 3px;
+  border-left: 3px solid var(--clr-error);
+}
+
+/* ============================================================
+   FORM BUTTONS  (id selector)
+   ============================================================ */
+#form-buttons {
+  display:         flex;
+  justify-content: center;
+  gap:             16px;
+  margin-top:      36px;
+  flex-wrap:       wrap;
+}
+
+/* ID selector */
+#btn-reset {
+  font-family:    var(--font-body);
+  font-size:      0.85rem;
+  font-weight:    600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 22px;
+  background:     #eceff1;
+  color:          #546e7a;
+  border:         2px solid #b0bec5;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  transition:     background 0.2s, color 0.2s;
+}
+
+/* Pseudo-class selector */
+#btn-reset:hover {
+  background: #cfd8dc;
+  color:      var(--clr-heading);
+}
+
+/* ID selector – Review button */
+#btn-review {
+  font-family:    var(--font-body);
+  font-size:      0.88rem;
+  font-weight:    600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 24px;
+  background:     linear-gradient(135deg, #0277bd, #01579b);
+  color:          #ffffff;
+  border:         none;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  box-shadow:     0 3px 10px rgba(2,119,189,0.35);
+  transition:     transform 0.15s, box-shadow 0.15s;
+}
+
+/* Pseudo-class selector */
+#btn-review:hover {
+  transform:  translateY(-2px);
+  box-shadow: 0 6px 16px rgba(2,119,189,0.4);
+}
+
+/* ID selector */
+#btn-submit {
+  font-family:    var(--font-body);
+  font-size:      0.95rem;
+  font-weight:    600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 32px;
+  background:     linear-gradient(135deg, var(--clr-banner-start), var(--clr-accent2));
+  color:          #ffffff;
+  border:         none;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  box-shadow:     0 3px 10px rgba(26,60,52,0.35);
+  transition:     transform 0.15s, box-shadow 0.15s;
+}
+
+/* Pseudo-class selector */
+#btn-submit:hover {
+  transform:  translateY(-2px);
+  box-shadow: 0 6px 16px rgba(26,60,52,0.4);
+}
+
+/* ============================================================
+   REVIEW PANEL  (id selector)
+   ============================================================ */
+#review-panel {
+  flex:          0 1 420px;
+  background:    var(--clr-card);
+  border-radius: var(--radius);
+  box-shadow:    0 4px 20px rgba(0,0,0,0.14);
+  padding:       28px 30px 36px;
+  border-top:    5px solid var(--clr-accent2);
+  position:      sticky;
+  top:           20px;
+  min-width:     320px;
+}
+
+/* ID selector */
+#review-title {
+  font-family:   var(--font-display);
+  font-size:     1.3rem;
+  color:         var(--clr-heading);
+  margin-bottom: 4px;
+}
+
+/* ID selector */
+#review-subtitle {
+  font-size:     0.82rem;
+  color:         #78909c;
+  margin-bottom: 18px;
+}
+
+/* ID selector */
+#review-table {
+  width:           100%;
+  border-collapse: collapse;
+  font-size:       0.83rem;
+}
+
+/* TAG selector inside review */
+#review-table tr:nth-child(even):not(.review-section-row) {
+  background: #f5f5f5;
+}
+
+/* CLASS selector */
+.review-section-row td {
+  background:    linear-gradient(90deg, var(--clr-banner-start), var(--clr-accent2));
+  color:         #ffffff;
+  font-family:   var(--font-display);
+  font-size:     0.88rem;
+  padding:       6px 10px;
+  font-weight:   700;
+  letter-spacing: 0.5px;
+  margin-top:    12px;
+}
+
+/* CLASS selectors – review table cells */
+.rv-label {
+  font-weight:    600;
+  color:          var(--clr-label);
+  padding:        5px 8px;
+  white-space:    nowrap;
+  vertical-align: top;
+  width:          38%;
+}
+
+.rv-value {
+  color:          var(--clr-text);
+  padding:        5px 8px;
+  word-break:     break-word;
+  vertical-align: top;
+}
+
+/* CLASS selector – status column */
+.rv-status {
+  padding:        5px 8px;
+  font-size:      0.75rem;
+  font-weight:    700;
+  white-space:    nowrap;
+  vertical-align: top;
+  border-radius:  4px;
+}
+
+/* CLASS selectors – pass and error states */
+.rv-status.pass {
+  color:      var(--clr-pass);
+  background: var(--clr-pass-bg);
+}
+
+.rv-status.error {
+  color:      var(--clr-error);
+  background: var(--clr-error-bg);
+}
+
+/* ID selector */
+#review-buttons {
+  display:         flex;
+  gap:             12px;
+  margin-top:      22px;
+  justify-content: center;
+  flex-wrap:       wrap;
+}
+
+/* ID selector */
+#btn-back {
+  font-family:    var(--font-body);
+  font-size:      0.85rem;
+  font-weight:    600;
+  padding:        10px 20px;
+  background:     #eceff1;
+  color:          #546e7a;
+  border:         2px solid #b0bec5;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  transition:     background 0.2s;
+}
+
+#btn-back:hover {
+  background: #cfd8dc;
+}
+
+/* ID selector */
+#btn-confirm {
+  font-family:    var(--font-body);
+  font-size:      0.9rem;
+  font-weight:    600;
+  padding:        10px 24px;
+  background:     linear-gradient(135deg, var(--clr-banner-start), var(--clr-accent2));
+  color:          #ffffff;
+  border:         none;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  box-shadow:     0 3px 10px rgba(26,60,52,0.3);
+  transition:     transform 0.15s;
+}
+
+#btn-confirm:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   FOOTER  (id selector)
+   ============================================================ */
+#footer {
+  display:          flex;
+  justify-content:  space-between;
+  align-items:      center;
+  flex-wrap:        wrap;
+  gap:              16px;
+  background:       var(--clr-footer-bg);
+  color:            var(--clr-footer-text);
+  padding:          24px 36px;
+  font-size:        0.85rem;
+  line-height:      1.7;
+}
+
+/* ID selectors */
+#footer-left  { font-family: var(--font-body); }
+#footer-center { text-align: center; }
+#footer-right  { text-align: right; }
+
+/* ID selector */
+#btn-contact {
+  font-family:   var(--font-body);
+  font-size:     0.9rem;
+  font-weight:   600;
+  padding:       10px 22px;
+  background:    transparent;
+  color:         #a5d6a7;
+  border:        2px solid #a5d6a7;
+  border-radius: var(--radius);
+  cursor:        pointer;
+  transition:    background 0.2s, color 0.2s;
+}
+
+/* Pseudo-class selector */
+#btn-contact:hover {
+  background: #a5d6a7;
+  color:      var(--clr-banner-start);
+}
+
+/* TAG selector – footer links */
+#footer a {
+  color:           #80cbc4;
+  text-decoration: none;
+  transition:      color 0.2s;
+}
+
+/* Visited hyperlink pseudo-class selector */
+#footer a:visited { color: #4db6ac; }
+#footer a:hover   { color: #ffffff; text-decoration: underline; }
+
+/* ============================================================
+   HYPERLINKS (global – tag + pseudo-class selectors)
+   ============================================================ */
+a           { color: var(--clr-accent2); text-decoration: none; }
+a:visited   { color: #2e7d32; }
+a:hover     { color: var(--clr-accent); text-decoration: underline; }
+
+/* ============================================================
+   RESPONSIVE  (media query)
+   ============================================================ */
+@media (max-width: 900px) {
+  #page-wrapper {
+    flex-direction: column;
+  }
+  #review-panel {
+    position: static;
+    flex:     1 1 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  #main-content { padding: 22px 16px 32px; }
+  .form-table tr { display: block; }
+  .label-cell,
+  .input-cell    { display: block; width: 100%; padding: 4px 0; }
+  #banner        { flex-direction: column; align-items: flex-start; }
+  #banner-right  { align-items: flex-start; }
+  #footer        { flex-direction: column; align-items: flex-start; }
+  #footer-right  { text-align: left; }
+  input[type="range"] { width: 180px; }
+}
+
+/* end of style.css */
