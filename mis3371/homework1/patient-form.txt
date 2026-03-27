@@ -1,0 +1,117 @@
+MedCarePlus Your Health. Our Priority.
+Patient Registration Portal
+New Patient Registration
+Please complete all required fields (*) accurately. Hover over any field for instructions. Your information is kept strictly confidential.
+Personal Information
+First Name *
+
+MI
+
+Last Name *
+
+Date of Birth *
+
+Social Security # *
+
+Gender *
+Male Female Non-binary Prefer not to say
+Contact Information
+Email Address *
+
+Phone Number
+
+Address
+Address Line 1 *
+
+Address Line 2
+
+City *
+
+State *
+              -- Select State --
+              AL – Alabama
+              AK – Alaska
+              AZ – Arizona
+              AR – Arkansas
+              CA – California
+              CO – Colorado
+              CT – Connecticut
+              DE – Delaware
+              DC – District of Columbia
+              FL – Florida
+              GA – Georgia
+              HI – Hawaii
+              ID – Idaho
+              IL – Illinois
+              IN – Indiana
+              IA – Iowa
+              KS – Kansas
+              KY – Kentucky
+              LA – Louisiana
+              ME – Maine
+              MD – Maryland
+              MA – Massachusetts
+              MI – Michigan
+              MN – Minnesota
+              MS – Mississippi
+              MO – Missouri
+              MT – Montana
+              NE – Nebraska
+              NV – Nevada
+              NH – New Hampshire
+              NJ – New Jersey
+              NM – New Mexico
+              NY – New York
+              NC – North Carolina
+              ND – North Dakota
+              OH – Ohio
+              OK – Oklahoma
+              OR – Oregon
+              PA – Pennsylvania
+              RI – Rhode Island
+              SC – South Carolina
+              SD – South Dakota
+              TN – Tennessee
+              TX – Texas
+              UT – Utah
+              VT – Vermont
+              VA – Virginia
+              WA – Washington
+              WV – West Virginia
+              WI – Wisconsin
+              WY – Wyoming
+              PR – Puerto Rico
+            
+Zip Code *
+
+Health History & Preferences
+Have you been vaccinated? *
+Yes No
+Do you have insurance? *
+Yes No
+Do you own or rent your home?
+Own Rent Unsure
+Previous Conditions
+(check all that apply)
+Chicken Pox Measles COVID-19 Small Pox Tetanus Diabetes Hypertension
+Desired Annual Salary
+(for billing estimate)
+$20k $200k $60,000 / yr
+Overall Health Rating *
+(1=poor, 10=excellent)
+1 10 5
+Describe Current Symptoms
+
+Account Credentials
+Desired User ID *
+
+Password *
+
+Confirm Password *
+
+Review My Information
+MedCarePlus
+PO Box 18881
+Sugar Land, TX  77496
+📧 Contact Us
+Facebook | Twitter / X | Instagram

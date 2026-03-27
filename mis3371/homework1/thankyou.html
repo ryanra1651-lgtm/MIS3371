@@ -1,11 +1,11 @@
 <!--
-Program name: thankyou.html
-Author: Student Name
-Date created: 02/27/2026
-Date last edited: 02/27/2026
-Version: 1.0
-Description: Thank You confirmation page shown after patient registration
-             form is submitted successfully.
+  Program name: thankyou.html
+  Author: Ryan Alexander Rodriguez
+  Date created: 02/27/2026
+  Date last edited: 03/27/2026
+  Version: 2.0
+  Description: Thank You confirmation page shown after patient registration
+               form is successfully submitted.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -37,15 +37,17 @@ Description: Thank You confirmation page shown after patient registration
 </div>
 
 <!-- MAIN CONTENT -->
-<div id="main-content" style="text-align:center; padding: 60px 40px;">
-  <h1>🎉 Thank You for Your Submission!</h1>
-  <p style="font-size:1.1rem; color:#546e7a; margin-top:18px; max-width:520px; margin-left:auto; margin-right:auto;">
-    Your patient registration has been received. A member of our team will review
-    your information and contact you shortly to confirm your account.
-  </p>
-  <p style="margin-top:30px;">
-    <a href="patient-form.html">← Return to Registration Form</a>
-  </p>
+<div id="page-wrapper">
+  <div id="main-content" style="text-align:center; padding:60px 40px;">
+    <h1>&#127881; Thank You for Your Submission!</h1>
+    <p style="font-size:1.1rem; color:#546e7a; margin-top:18px; max-width:520px; margin-left:auto; margin-right:auto;">
+      Your patient registration has been received. A member of our team will review
+      your information and contact you shortly to confirm your account.
+    </p>
+    <p style="margin-top:30px;">
+      <a href="patient-form.html">&#8592; Return to Registration Form</a>
+    </p>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -56,19 +58,20 @@ Description: Thank You confirmation page shown after patient registration
     Sugar Land, TX &nbsp;77496
   </div>
   <div id="footer-center">
-    <button type="button" id="btn-contact" onclick="alert('Contact us at info@medcareplus.com or call (713) 555-0100')">
-      📧 Contact Us
+    <button type="button" id="btn-contact"
+            onclick="alert('Contact us at info@medcareplus.com\nPhone: (713) 555-0100')">
+      &#128231; Contact Us
     </button>
   </div>
   <div id="footer-right">
     <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
-    <a href="https://www.twitter.com" target="_blank" rel="noopener">Twitter / X</a> |
+    <a href="https://www.twitter.com"  target="_blank" rel="noopener">Twitter / X</a> |
     <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
   </div>
 </div>
 
 <script>
-  (function () {
+  (function() {
     var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     var months = ["January","February","March","April","May","June",
                   "July","August","September","October","November","December"];
@@ -79,8 +82,8 @@ Description: Thank You confirmation page shown after patient registration
     var year   = now.getFullYear();
     var suffix = "th";
     if (date === 1 || date === 21 || date === 31) suffix = "st";
-    else if (date === 2 || date === 22) suffix = "nd";
-    else if (date === 3 || date === 23) suffix = "rd";
+    else if (date === 2 || date === 22)           suffix = "nd";
+    else if (date === 3 || date === 23)           suffix = "rd";
     document.getElementById("dynamic-date").textContent =
       day + ", " + month + " " + date + suffix + ", " + year;
   })();
