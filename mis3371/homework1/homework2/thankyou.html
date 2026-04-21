@@ -1,11 +1,9 @@
 <!--
   Program name: thankyou.html
   Author: Ryan Alexander Rodriguez
-  Date created: 02/27/2026
-  Date last edited: 03/27/2026
-  Version: 2.0
-  Description: Thank You confirmation page shown after patient registration
-               form is successfully submitted.
+  Date created: 04/21/2026
+  Version: 3.0
+  Description: Thank You page shown after successful form submission.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -13,14 +11,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedCare Plus – Thank You</title>
-  <link href="style.css" rel="stylesheet" />
+  <link href="style3.css" rel="stylesheet" />
+  <style>
+    #thankyou-box {
+      max-width: 600px;
+      margin: 80px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      padding: 60px 48px;
+      text-align: center;
+      border-top: 6px solid #43a047;
+    }
+    #thankyou-box h1 { font-size: 2.2rem; color: #1a3c34; margin-bottom: 16px; }
+    #thankyou-box p  { font-size: 1.05rem; color: #546e7a; margin-bottom: 12px; }
+    .check-icon { font-size: 4rem; color: #43a047; margin-bottom: 20px; display: block; }
+    #back-link { display: inline-block; margin-top: 28px; padding: 12px 30px;
+      background: linear-gradient(135deg, #1a3c34, #43a047);
+      color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    #back-link:hover { opacity: 0.9; }
+  </style>
 </head>
 <body>
-
-<!-- HEADER / BANNER -->
 <div id="banner">
   <div id="banner-left">
-    <svg id="logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-label="MedCare Plus logo">
+    <svg id="logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
       <circle cx="30" cy="30" r="28" fill="#ffffff" stroke="#c8e6c9" stroke-width="2"/>
       <rect x="24" y="12" width="12" height="36" rx="3" fill="#e53935"/>
       <rect x="12" y="24" width="36" height="12" rx="3" fill="#e53935"/>
@@ -30,65 +45,24 @@
       <span id="brand-tagline">Your Health. Our Priority.</span>
     </div>
   </div>
-  <div id="banner-right">
-    <span id="dynamic-date"></span>
-    <span id="banner-sub">Patient Registration Portal</span>
-  </div>
 </div>
 
-<!-- MAIN CONTENT -->
-<div id="page-wrapper">
-  <div id="main-content" style="text-align:center; padding:60px 40px;">
-    <h1>&#127881; Thank You for Your Submission!</h1>
-    <p style="font-size:1.1rem; color:#546e7a; margin-top:18px; max-width:520px; margin-left:auto; margin-right:auto;">
-      Your patient registration has been received. A member of our team will review
-      your information and contact you shortly to confirm your account.
-    </p>
-    <p style="margin-top:30px;">
-      <a href="patient-form.html">&#8592; Return to Registration Form</a>
-    </p>
-  </div>
+<div id="thankyou-box">
+  <span class="check-icon">&#10003;</span>
+  <h1>Thank You for Your Submission!</h1>
+  <p>We have received your patient registration information.</p>
+  <p>We will be contacting you shortly to confirm your appointment.</p>
+  <a href="homework3.html" id="back-link">&#8592; Return to Registration Form</a>
 </div>
 
-<!-- FOOTER -->
 <div id="footer">
-  <div id="footer-left">
-    <strong>MedCare<span class="brand-accent">Plus</span></strong><br />
-    PO Box 18881<br />
-    Sugar Land, TX &nbsp;77496
-  </div>
-  <div id="footer-center">
-    <button type="button" id="btn-contact"
-            onclick="alert('Contact us at info@medcareplus.com\nPhone: (713) 555-0100')">
-      &#128231; Contact Us
-    </button>
-  </div>
+  <div id="footer-left"><strong>MedCare<span class="brand-accent">Plus</span></strong><br />PO Box 18881<br />Sugar Land, TX &nbsp;77496</div>
+  <div id="footer-center"></div>
   <div id="footer-right">
-    <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
-    <a href="https://www.twitter.com"  target="_blank" rel="noopener">Twitter / X</a> |
-    <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.facebook.com" target="_blank">Facebook</a> |
+    <a href="https://www.twitter.com" target="_blank">Twitter / X</a> |
+    <a href="https://www.instagram.com" target="_blank">Instagram</a>
   </div>
 </div>
-
-<script>
-  (function() {
-    var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    var months = ["January","February","March","April","May","June",
-                  "July","August","September","October","November","December"];
-    var now    = new Date();
-    var day    = days[now.getDay()];
-    var month  = months[now.getMonth()];
-    var date   = now.getDate();
-    var year   = now.getFullYear();
-    var suffix = "th";
-    if (date === 1 || date === 21 || date === 31) suffix = "st";
-    else if (date === 2 || date === 22)           suffix = "nd";
-    else if (date === 3 || date === 23)           suffix = "rd";
-    document.getElementById("dynamic-date").textContent =
-      day + ", " + month + " " + date + suffix + ", " + year;
-  })();
-</script>
-
-<!-- end of thankyou.html -->
 </body>
 </html>

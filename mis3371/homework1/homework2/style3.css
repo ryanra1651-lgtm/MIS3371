@@ -1,0 +1,533 @@
+/*
+  Program name: style3.css
+  Author: Ryan Alexander Rodriguez
+  Date created: 04/21/2026
+  Date last edited: 04/21/2026
+  Version: 3.0
+  Description: External stylesheet for MedCare Plus Patient Registration Form (HW3).
+               Builds on HW2 styles. Adds:
+               - Input field red/green border feedback
+               - Pulse animation for Submit button reveal
+               - Validate button styling
+               - Reserved space for error messages (no form jumping)
+*/
+
+/* ============================================================
+   GOOGLE FONTS IMPORT
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES
+   ============================================================ */
+:root {
+  --clr-bg:           #eef4f0;
+  --clr-banner-start: #1a3c34;
+  --clr-banner-end:   #2e7d52;
+  --clr-accent:       #e53935;
+  --clr-accent2:      #43a047;
+  --clr-card:         #ffffff;
+  --clr-border:       #b2dfdb;
+  --clr-heading:      #1a3c34;
+  --clr-text:         #263238;
+  --clr-label:        #37474f;
+  --clr-footer-bg:    #1a3c34;
+  --clr-footer-text:  #cfd8dc;
+  --clr-error:        #c62828;
+  --clr-error-bg:     #ffebee;
+  --clr-pass:         #2e7d32;
+  --clr-pass-bg:      #e8f5e9;
+  --font-display:     'Playfair Display', Georgia, serif;
+  --font-body:        'Source Sans 3', 'Segoe UI', sans-serif;
+  --radius:           8px;
+  --shadow:           0 2px 12px rgba(0,0,0,0.09);
+}
+
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family:      var(--font-body);
+  font-size:        15px;
+  font-weight:      400;
+  color:            var(--clr-text);
+  background-color: var(--clr-bg);
+  background-image: radial-gradient(circle at 20% 50%, #c8e6c930 0%, transparent 55%),
+                    radial-gradient(circle at 80% 20%, #a5d6a730 0%, transparent 45%);
+  line-height:      1.6;
+  min-height:       100vh;
+}
+
+/* ============================================================
+   BANNER
+   ============================================================ */
+#banner {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  background:      linear-gradient(135deg, var(--clr-banner-start), var(--clr-banner-end));
+  color:           #ffffff;
+  padding:         18px 32px;
+  box-shadow:      0 3px 14px rgba(0,0,0,0.25);
+  flex-wrap:       wrap;
+  gap:             12px;
+}
+
+#banner-left    { display: flex; align-items: center; gap: 16px; }
+
+svg#logo {
+  width:    64px;
+  height:   64px;
+  filter:   drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+  flex-shrink: 0;
+}
+
+#brand-text     { display: flex; flex-direction: column; }
+
+#brand-name {
+  font-family:    var(--font-display);
+  font-size:      2rem;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  line-height:    1;
+}
+
+.brand-accent { color: #a5d6a7; }
+
+#brand-tagline {
+  font-size:      0.78rem;
+  font-weight:    300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity:        0.85;
+  margin-top:     3px;
+}
+
+#banner-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+#dynamic-date {
+  font-family:    var(--font-display);
+  font-size:      1rem;
+  font-weight:    600;
+  letter-spacing: 0.3px;
+}
+
+#banner-sub {
+  font-size:      0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity:        0.75;
+}
+
+/* ============================================================
+   PAGE WRAPPER
+   ============================================================ */
+#page-wrapper {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         24px;
+  max-width:   1300px;
+  margin:      28px auto;
+  padding:     0 16px;
+  align-items: flex-start;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#main-content {
+  flex:          1 1 600px;
+  background:    var(--clr-card);
+  border-radius: var(--radius);
+  box-shadow:    var(--shadow);
+  padding:       36px 44px 44px;
+  min-width:     320px;
+}
+
+h1 {
+  font-family:   var(--font-display);
+  font-size:     1.85rem;
+  color:         var(--clr-heading);
+  margin-bottom: 6px;
+}
+
+.form-intro {
+  color:         #546e7a;
+  font-size:     0.88rem;
+  margin-bottom: 28px;
+}
+
+.req-star { color: var(--clr-accent); font-weight: 700; }
+
+h2.section-heading {
+  font-family:    var(--font-display);
+  font-size:      1.15rem;
+  color:          #ffffff;
+  background:     linear-gradient(90deg, var(--clr-banner-start), var(--clr-accent2));
+  padding:        8px 16px;
+  border-radius:  var(--radius);
+  margin:         28px 0 14px;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   FORM TABLE
+   ============================================================ */
+.form-table {
+  width:           100%;
+  border-collapse: separate;
+  border-spacing:  0 10px;
+}
+
+.label-cell {
+  font-weight:    600;
+  color:          var(--clr-label);
+  font-size:      0.88rem;
+  padding-right:  12px;
+  white-space:    nowrap;
+  vertical-align: middle;
+}
+
+.input-cell { padding-right: 20px; vertical-align: middle; }
+
+/* ============================================================
+   INPUTS / SELECTS / TEXTAREAS
+   ============================================================ */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+  font-family:   var(--font-body);
+  font-size:     0.9rem;
+  color:         var(--clr-text);
+  border:        1.5px solid var(--clr-border);
+  border-radius: 5px;
+  padding:       7px 10px;
+  background:    #f9fbe7;
+  transition:    border-color 0.2s, box-shadow 0.2s;
+  width:         100%;
+}
+
+select[name="state"] { width: auto; min-width: 160px; }
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  outline:      none;
+  border-color: var(--clr-accent2);
+  box-shadow:   0 0 0 3px rgba(67,160,71,0.18);
+  background:   #ffffff;
+}
+
+/* ============================================================
+   LIVE VALIDATION FIELD STATES (HW3 new)
+   Fields get a green or red border after validation feedback
+   ============================================================ */
+input.field-ok,
+select.field-ok,
+textarea.field-ok {
+  border-color: var(--clr-accent2) !important;
+  background:   #f1f8e9 !important;
+}
+
+input.field-err,
+select.field-err,
+textarea.field-err {
+  border-color: var(--clr-error) !important;
+  background:   #fff5f5 !important;
+}
+
+textarea { resize: vertical; line-height: 1.5; }
+
+.radio-label {
+  margin-right: 20px;
+  font-size:    0.9rem;
+  cursor:       pointer;
+  display:      inline-flex;
+  align-items:  center;
+  gap:          5px;
+}
+
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+
+.checkbox-group label {
+  font-size:   0.9rem;
+  cursor:      pointer;
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+}
+
+/* ============================================================
+   SLIDERS
+   ============================================================ */
+.slider-wrap  { display: flex; align-items: center; gap: 10px; }
+.slider-label { font-weight: 600; font-size: 0.85rem; color: var(--clr-label); }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width:        260px;
+  height:       6px;
+  border-radius: 4px;
+  background:   linear-gradient(to right, var(--clr-accent2), var(--clr-accent));
+  border:       none;
+  cursor:       pointer;
+  padding:      0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width:         20px;
+  height:        20px;
+  border-radius: 50%;
+  background:    var(--clr-banner-start);
+  border:        2px solid #fff;
+  box-shadow:    0 1px 4px rgba(0,0,0,0.3);
+  cursor:        pointer;
+}
+
+.slider-value {
+  font-weight: 700;
+  font-size:   1rem;
+  color:       var(--clr-banner-start);
+  min-width:   130px;
+  text-align:  left;
+}
+
+/* ============================================================
+   ERROR MESSAGES (HW3: pre-reserved height so form doesn't jump)
+   ============================================================ */
+.err-msg {
+  display:       none;          /* hidden until an error occurs */
+  color:         var(--clr-error);
+  font-size:     0.78rem;
+  font-weight:   600;
+  margin-top:    3px;
+  background:    var(--clr-error-bg);
+  padding:       2px 6px;
+  border-radius: 3px;
+  border-left:   3px solid var(--clr-error);
+  min-height:    1.1em;         /* reserve space so layout stays stable */
+}
+
+/* ============================================================
+   FORM BUTTONS
+   ============================================================ */
+#form-buttons {
+  display:         flex;
+  justify-content: center;
+  gap:             16px;
+  margin-top:      36px;
+  flex-wrap:       wrap;
+  align-items:     center;
+}
+
+/* RESET button */
+#btn-reset {
+  font-family:    var(--font-body);
+  font-size:      0.85rem;
+  font-weight:    600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 22px;
+  background:     #eceff1;
+  color:          #546e7a;
+  border:         2px solid #b0bec5;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  transition:     background 0.2s, color 0.2s;
+}
+
+#btn-reset:hover { background: #cfd8dc; color: var(--clr-heading); }
+
+/* REVIEW button */
+#btn-review {
+  font-family:    var(--font-body);
+  font-size:      0.88rem;
+  font-weight:    600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 24px;
+  background:     linear-gradient(135deg, #0277bd, #01579b);
+  color:          #ffffff;
+  border:         none;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  box-shadow:     0 3px 10px rgba(2,119,189,0.35);
+  transition:     transform 0.15s, box-shadow 0.15s;
+}
+
+#btn-review:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(2,119,189,0.4); }
+
+/* VALIDATE button (HW3 new – replaces old submit) */
+#btn-validate {
+  font-family:    var(--font-body);
+  font-size:      0.95rem;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 32px;
+  background:     linear-gradient(135deg, #f57f17, #e65100);
+  color:          #ffffff;
+  border:         none;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  box-shadow:     0 3px 10px rgba(230,81,0,0.4);
+  transition:     transform 0.15s, box-shadow 0.15s;
+}
+
+#btn-validate:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(230,81,0,0.5); }
+
+/* SUBMIT button – hidden until all fields pass (HW3 new) */
+#btn-submit {
+  display:        none;   /* shown by JS only when all fields pass */
+  font-family:    var(--font-body);
+  font-size:      0.95rem;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding:        11px 32px;
+  background:     linear-gradient(135deg, var(--clr-banner-start), var(--clr-accent2));
+  color:          #ffffff;
+  border:         none;
+  border-radius:  var(--radius);
+  cursor:         pointer;
+  box-shadow:     0 3px 10px rgba(26,60,52,0.35);
+  transition:     transform 0.15s, box-shadow 0.15s;
+}
+
+#btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(26,60,52,0.4); }
+
+/* Pulse animation when Submit button first appears */
+@keyframes pulse-green {
+  0%   { box-shadow: 0 0 0 0   rgba(67,160,71,0.7); }
+  70%  { box-shadow: 0 0 0 14px rgba(67,160,71,0);  }
+  100% { box-shadow: 0 0 0 0   rgba(67,160,71,0);   }
+}
+
+#btn-submit.pulse { animation: pulse-green 0.9s ease-out; }
+
+/* ============================================================
+   REVIEW PANEL
+   ============================================================ */
+#review-panel {
+  flex:          0 1 420px;
+  background:    var(--clr-card);
+  border-radius: var(--radius);
+  box-shadow:    0 4px 20px rgba(0,0,0,0.14);
+  padding:       28px 30px 36px;
+  border-top:    5px solid var(--clr-accent2);
+  position:      sticky;
+  top:           20px;
+  min-width:     320px;
+}
+
+#review-title   { font-family: var(--font-display); font-size: 1.3rem; color: var(--clr-heading); margin-bottom: 4px; }
+#review-subtitle{ font-size: 0.82rem; color: #78909c; margin-bottom: 18px; }
+
+#review-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+
+#review-table tr:nth-child(even):not(.review-section-row) { background: #f5f5f5; }
+
+.review-section-row td {
+  background:     linear-gradient(90deg, var(--clr-banner-start), var(--clr-accent2));
+  color:          #ffffff;
+  font-family:    var(--font-display);
+  font-size:      0.88rem;
+  padding:        6px 10px;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+}
+
+.rv-label { font-weight: 600; color: var(--clr-label); padding: 5px 8px; white-space: nowrap; vertical-align: top; width: 38%; }
+.rv-value { color: var(--clr-text); padding: 5px 8px; word-break: break-word; vertical-align: top; }
+
+.rv-status { padding: 5px 8px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; vertical-align: top; border-radius: 4px; }
+.rv-status.pass  { color: var(--clr-pass);  background: var(--clr-pass-bg);  }
+.rv-status.error { color: var(--clr-error); background: var(--clr-error-bg); }
+
+#review-buttons { display: flex; gap: 12px; margin-top: 22px; justify-content: center; flex-wrap: wrap; }
+
+#btn-back {
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+  padding: 10px 20px; background: #eceff1; color: #546e7a;
+  border: 2px solid #b0bec5; border-radius: var(--radius);
+  cursor: pointer; transition: background 0.2s;
+}
+#btn-back:hover { background: #cfd8dc; }
+
+#btn-confirm {
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--clr-banner-start), var(--clr-accent2));
+  color: #ffffff; border: none; border-radius: var(--radius);
+  cursor: pointer; box-shadow: 0 3px 10px rgba(26,60,52,0.3);
+  transition: transform 0.15s;
+}
+#btn-confirm:hover { transform: translateY(-2px); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+#footer {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  flex-wrap:       wrap;
+  gap:             16px;
+  background:      var(--clr-footer-bg);
+  color:           var(--clr-footer-text);
+  padding:         24px 36px;
+  font-size:       0.85rem;
+  line-height:     1.7;
+}
+
+#footer-left  { font-family: var(--font-body); }
+#footer-center{ text-align: center; }
+#footer-right { text-align: right; }
+
+#btn-contact {
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  padding: 10px 22px; background: transparent; color: #a5d6a7;
+  border: 2px solid #a5d6a7; border-radius: var(--radius);
+  cursor: pointer; transition: background 0.2s, color 0.2s;
+}
+#btn-contact:hover { background: #a5d6a7; color: var(--clr-banner-start); }
+
+#footer a         { color: #80cbc4; text-decoration: none; transition: color 0.2s; }
+#footer a:visited { color: #4db6ac; }
+#footer a:hover   { color: #ffffff; text-decoration: underline; }
+
+a           { color: var(--clr-accent2); text-decoration: none; }
+a:visited   { color: #2e7d32; }
+a:hover     { color: var(--clr-accent); text-decoration: underline; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  #page-wrapper { flex-direction: column; }
+  #review-panel { position: static; flex: 1 1 100%; }
+}
+
+@media (max-width: 720px) {
+  #main-content { padding: 22px 16px 32px; }
+  .form-table tr { display: block; }
+  .label-cell, .input-cell { display: block; width: 100%; padding: 4px 0; }
+  #banner       { flex-direction: column; align-items: flex-start; }
+  #banner-right { align-items: flex-start; }
+  #footer       { flex-direction: column; align-items: flex-start; }
+  #footer-right { text-align: left; }
+  input[type="range"] { width: 180px; }
+}
+
+/* end of style3.css */

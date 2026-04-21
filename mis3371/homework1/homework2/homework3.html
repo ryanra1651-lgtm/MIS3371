@@ -1,0 +1,439 @@
+<!--
+  Program name: homework3.html
+  Author: Ryan Alexander Rodriguez
+  Date created: 04/21/2026
+  Date last edited: 04/21/2026
+  Version: 3.0
+  Description: MedCare Plus Patient Registration Form – Homework 3.
+               All validation now done live on-the-fly with JavaScript
+               (oninput / onblur). Error messages stay until corrected.
+               Submit button only appears when all fields pass.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCare Plus – Patient Registration (HW3)</title>
+  <link href="style3.css" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ===================== BANNER ===================== -->
+<div id="banner">
+  <div id="banner-left">
+    <svg id="logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="28" fill="#ffffff" stroke="#c8e6c9" stroke-width="2"/>
+      <rect x="24" y="12" width="12" height="36" rx="3" fill="#e53935"/>
+      <rect x="12" y="24" width="36" height="12" rx="3" fill="#e53935"/>
+    </svg>
+    <div id="brand-text">
+      <span id="brand-name">MedCare<span class="brand-accent">Plus</span></span>
+      <span id="brand-tagline">Your Health. Our Priority.</span>
+    </div>
+  </div>
+  <div id="banner-right">
+    <span id="dynamic-date"></span>
+    <span id="banner-sub">Patient Registration Portal</span>
+  </div>
+</div>
+
+<!-- ===================== PAGE WRAPPER ===================== -->
+<div id="page-wrapper">
+  <div id="main-content">
+    <h1>New Patient Registration</h1>
+    <p class="form-intro">
+      Please complete all required fields (<span class="req-star">*</span>) accurately.
+      Hover over any field for instructions. Errors are shown <strong>as you type</strong>
+      and must be corrected before you can submit.
+    </p>
+
+    <form id="reg-form" novalidate>
+
+      <!-- ===== PERSONAL INFORMATION ===== -->
+      <h2 class="section-heading">Personal Information</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="firstname">First Name <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="firstname" name="firstname" maxlength="30"
+                   placeholder="First name"
+                   title="Enter your legal first name. Letters, apostrophes, and hyphens only. 1–30 characters."
+                   pattern="[A-Za-z'\-]{1,30}" required
+                   oninput="validateFirstName()" onblur="validateFirstName()" />
+            <span class="err-msg" id="err-firstname"></span>
+          </td>
+          <td class="label-cell"><label for="middleinit">MI</label></td>
+          <td class="input-cell">
+            <input type="text" id="middleinit" name="middleinit" maxlength="1" size="2"
+                   placeholder="M"
+                   title="Optional. One letter only. No numbers or symbols."
+                   pattern="[A-Za-z]?"
+                   oninput="validateMiddleInit()" onblur="validateMiddleInit()" />
+            <span class="err-msg" id="err-middleinit"></span>
+          </td>
+          <td class="label-cell"><label for="lastname">Last Name <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="lastname" name="lastname" maxlength="30"
+                   placeholder="Last name"
+                   title="Enter your legal last name. Letters, apostrophes, and hyphens only. 1–30 characters."
+                   pattern="[A-Za-z'\-]{1,30}" required
+                   oninput="validateLastName()" onblur="validateLastName()" />
+            <span class="err-msg" id="err-lastname"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="dob">Date of Birth <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="date" id="dob" name="dob"
+                   title="Enter your date of birth. Must be between 120 years ago and today." required
+                   onchange="validateDobField()" onblur="validateDobField()" />
+            <span class="err-msg" id="err-dob"></span>
+          </td>
+          <td class="label-cell"><label for="ssn">Patient ID # <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="3">
+            <input type="password" id="ssn" name="ssn" maxlength="11"
+                   placeholder="XXX-XX-XXXX"
+                   title="Enter your 9-digit Patient ID. Dashes are inserted automatically after 3 and 5 digits. Field is obscured for security."
+                   pattern="\d{3}-\d{2}-\d{4}" required
+                   oninput="formatSSN(this)" onblur="validateSSNField()" />
+            <span class="err-msg" id="err-ssn"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Gender <span class="req-star">*</span></td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="gender" value="Male" required
+              onchange="validateGender()" /> Male</label>
+            <label class="radio-label"><input type="radio" name="gender" value="Female"
+              onchange="validateGender()" /> Female</label>
+            <label class="radio-label"><input type="radio" name="gender" value="Non-binary"
+              onchange="validateGender()" /> Non-binary</label>
+            <label class="radio-label"><input type="radio" name="gender" value="Prefer not to say"
+              onchange="validateGender()" /> Prefer not to say</label>
+            <span class="err-msg" id="err-gender"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== CONTACT INFORMATION ===== -->
+      <h2 class="section-heading">Contact Information</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="email">Email Address <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="3">
+            <input type="email" id="email" name="email" maxlength="40"
+                   placeholder="name@domain.com"
+                   title="Enter a valid email in the format name@domain.tld. Will be converted to lowercase."
+                   pattern="[^@]+@[^@]+\.[^@]+" required
+                   oninput="validateEmailField()" onblur="validateEmailField()" />
+            <span class="err-msg" id="err-email"></span>
+          </td>
+          <td class="label-cell"><label for="phone">Phone Number</label></td>
+          <td class="input-cell">
+            <input type="tel" id="phone" name="phone" maxlength="14"
+                   placeholder="(XXX) XXX-XXXX"
+                   title="Optional. Enter your phone number in (XXX) XXX-XXXX format."
+                   pattern="\(\d{3}\) \d{3}-\d{4}"
+                   oninput="formatPhone(this)" onblur="validatePhoneField()" />
+            <span class="err-msg" id="err-phone"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== ADDRESS ===== -->
+      <h2 class="section-heading">Address</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="addr1">Address Line 1 <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="5">
+            <input type="text" id="addr1" name="addr1" maxlength="30"
+                   placeholder="Street address"
+                   title="Enter your street address. 2–30 characters required."
+                   pattern=".{2,30}" required
+                   oninput="validateAddr1()" onblur="validateAddr1()" />
+            <span class="err-msg" id="err-addr1"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="addr2">Address Line 2</label></td>
+          <td class="input-cell" colspan="5">
+            <input type="text" id="addr2" name="addr2" maxlength="30"
+                   placeholder="Apt, Suite, Unit (optional)"
+                   title="Optional. If entered, must be 2–30 characters."
+                   pattern="(.{2,30})?"
+                   oninput="validateAddr2()" onblur="validateAddr2()" />
+            <span class="err-msg" id="err-addr2"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="city">City <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="city" name="city" maxlength="30"
+                   placeholder="City"
+                   title="Enter your city name. 2–30 characters required."
+                   pattern=".{2,30}" required
+                   oninput="validateCity()" onblur="validateCity()" />
+            <span class="err-msg" id="err-city"></span>
+          </td>
+          <td class="label-cell"><label for="state">State <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <select id="state" name="state"
+                    title="Select your state or territory." required
+                    onchange="validateState()" onblur="validateState()">
+              <option value="">-- Select State --</option>
+              <option value="AL">AL – Alabama</option><option value="AK">AK – Alaska</option>
+              <option value="AZ">AZ – Arizona</option><option value="AR">AR – Arkansas</option>
+              <option value="CA">CA – California</option><option value="CO">CO – Colorado</option>
+              <option value="CT">CT – Connecticut</option><option value="DE">DE – Delaware</option>
+              <option value="DC">DC – District of Columbia</option><option value="FL">FL – Florida</option>
+              <option value="GA">GA – Georgia</option><option value="HI">HI – Hawaii</option>
+              <option value="ID">ID – Idaho</option><option value="IL">IL – Illinois</option>
+              <option value="IN">IN – Indiana</option><option value="IA">IA – Iowa</option>
+              <option value="KS">KS – Kansas</option><option value="KY">KY – Kentucky</option>
+              <option value="LA">LA – Louisiana</option><option value="ME">ME – Maine</option>
+              <option value="MD">MD – Maryland</option><option value="MA">MA – Massachusetts</option>
+              <option value="MI">MI – Michigan</option><option value="MN">MN – Minnesota</option>
+              <option value="MS">MS – Mississippi</option><option value="MO">MO – Missouri</option>
+              <option value="MT">MT – Montana</option><option value="NE">NE – Nebraska</option>
+              <option value="NV">NV – Nevada</option><option value="NH">NH – New Hampshire</option>
+              <option value="NJ">NJ – New Jersey</option><option value="NM">NM – New Mexico</option>
+              <option value="NY">NY – New York</option><option value="NC">NC – North Carolina</option>
+              <option value="ND">ND – North Dakota</option><option value="OH">OH – Ohio</option>
+              <option value="OK">OK – Oklahoma</option><option value="OR">OR – Oregon</option>
+              <option value="PA">PA – Pennsylvania</option><option value="RI">RI – Rhode Island</option>
+              <option value="SC">SC – South Carolina</option><option value="SD">SD – South Dakota</option>
+              <option value="TN">TN – Tennessee</option><option value="TX">TX – Texas</option>
+              <option value="UT">UT – Utah</option><option value="VT">VT – Vermont</option>
+              <option value="VA">VA – Virginia</option><option value="WA">WA – Washington</option>
+              <option value="WV">WV – West Virginia</option><option value="WI">WI – Wisconsin</option>
+              <option value="WY">WY – Wyoming</option><option value="PR">PR – Puerto Rico</option>
+            </select>
+            <span class="err-msg" id="err-state"></span>
+          </td>
+          <td class="label-cell"><label for="zip">Zip Code <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="zip" name="zip" maxlength="10"
+                   placeholder="XXXXX"
+                   title="Enter a 5-digit ZIP code. Numbers only."
+                   pattern="\d{5}(-\d{4})?" required
+                   oninput="validateZip()" onblur="validateZip()" />
+            <span class="err-msg" id="err-zip"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== HEALTH HISTORY ===== -->
+      <h2 class="section-heading">Health History &amp; Preferences</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell">Have you been vaccinated? <span class="req-star">*</span></td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="vaccinated" value="Yes" required
+              onchange="validateVaccinated()" /> Yes</label>
+            <label class="radio-label"><input type="radio" name="vaccinated" value="No"
+              onchange="validateVaccinated()" /> No</label>
+            <span class="err-msg" id="err-vaccinated"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Do you have insurance? <span class="req-star">*</span></td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="insurance" value="Yes" required
+              onchange="validateInsurance()" /> Yes</label>
+            <label class="radio-label"><input type="radio" name="insurance" value="No"
+              onchange="validateInsurance()" /> No</label>
+            <span class="err-msg" id="err-insurance"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Do you own or rent?</td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="housing" value="Own" /> Own</label>
+            <label class="radio-label"><input type="radio" name="housing" value="Rent" /> Rent</label>
+            <label class="radio-label"><input type="radio" name="housing" value="Unsure" /> Unsure</label>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell" style="vertical-align:top;padding-top:10px;">
+            Previous Conditions<br/><small>(check all that apply)</small>
+          </td>
+          <td class="input-cell" colspan="5">
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="conditions" value="Chicken Pox" /> Chicken Pox</label>
+              <label><input type="checkbox" name="conditions" value="Measles" /> Measles</label>
+              <label><input type="checkbox" name="conditions" value="COVID-19" /> COVID-19</label>
+              <label><input type="checkbox" name="conditions" value="Small Pox" /> Small Pox</label>
+              <label><input type="checkbox" name="conditions" value="Tetanus" /> Tetanus</label>
+              <label><input type="checkbox" name="conditions" value="Diabetes" /> Diabetes</label>
+              <label><input type="checkbox" name="conditions" value="Hypertension" /> Hypertension</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">
+            Pain Level <span class="req-star">*</span><br/><small>(1=none, 10=severe)</small>
+          </td>
+          <td class="input-cell" colspan="5">
+            <div class="slider-wrap">
+              <span class="slider-label">1</span>
+              <input type="range" id="pain_bar" name="pain_bar" min="1" max="10" step="1" value="1"
+                     title="Drag to indicate your current pain level from 1 (no pain) to 10 (severe pain)."
+                     oninput="updatePain(this.value)" />
+              <span class="slider-label">10</span>
+              <span id="pain_val" class="slider-value">1 – No Pain</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">
+            Overall Health Rating <span class="req-star">*</span><br/><small>(1=poor, 10=excellent)</small>
+          </td>
+          <td class="input-cell" colspan="5">
+            <div class="slider-wrap">
+              <span class="slider-label">1</span>
+              <input type="range" id="health_rating" name="health_rating" min="1" max="10" value="5"
+                     title="Slide to rate your overall health from 1 (very poor) to 10 (excellent)."
+                     oninput="document.getElementById('health_val').textContent = this.value" />
+              <span class="slider-label">10</span>
+              <span id="health_val" class="slider-value">5</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell" style="vertical-align:top;padding-top:10px;">
+            <label for="symptoms">Describe Current Symptoms</label>
+          </td>
+          <td class="input-cell" colspan="5">
+            <textarea id="symptoms" name="symptoms" rows="4" cols="50"
+                      placeholder="Please describe any symptoms you are currently experiencing..."
+                      title='Optional. Describe your symptoms. Do not use quotation marks ( " ).'
+                      oninput="validateSymptoms()" onblur="validateSymptoms()"></textarea>
+            <span class="err-msg" id="err-symptoms"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== ACCOUNT CREDENTIALS ===== -->
+      <h2 class="section-heading">Account Credentials</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="userid">Desired User ID <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="5">
+            <input type="text" id="userid" name="userid" maxlength="20"
+                   placeholder="Choose a username (5–20 chars)"
+                   title="5–20 characters. Must start with a letter. Letters, numbers, underscores, and hyphens only. No spaces. Auto-converted to lowercase."
+                   pattern="[A-Za-z][A-Za-z0-9_\-]{4,19}" required
+                   oninput="this.value = this.value.toLowerCase(); validateUserID()"
+                   onblur="validateUserID()" />
+            <span class="err-msg" id="err-userid"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="password">Password <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="password" id="password" name="password" maxlength="30"
+                   placeholder="••••••••"
+                   title="8–30 characters. Must include 1 uppercase letter, 1 lowercase letter, and 1 digit. Cannot equal your User ID."
+                   required
+                   oninput="validatePasswords()" onblur="validatePasswords()" />
+            <span class="err-msg" id="err-password"></span>
+          </td>
+          <td class="label-cell"><label for="password2">Confirm Password <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="3">
+            <input type="password" id="password2" name="password2" maxlength="30"
+                   placeholder="••••••••"
+                   title="Re-enter your password exactly as typed above."
+                   required
+                   oninput="validatePasswords()" onblur="validatePasswords()" />
+            <span class="err-msg" id="err-password2"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== BUTTONS ===== -->
+      <div id="form-buttons">
+        <input type="reset" id="btn-reset" value="CLEAR AND START OVER"
+               title="Clear all fields and start over." onclick="clearForm()" />
+        <button type="button" id="btn-review"
+                title="Review your entered information before submitting."
+                onclick="reviewForm()">&#128203; Review My Information</button>
+        <button type="button" id="btn-validate"
+                title="Validate all fields. If everything is correct, a Submit button will appear."
+                onclick="runValidateAll()">&#10003; VALIDATE</button>
+        <!-- Submit button is hidden until all fields pass -->
+        <button type="button" id="btn-submit" style="display:none;"
+                title="Submit your registration."
+                onclick="submitForm()">&#128229; SUBMIT REGISTRATION</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ===== REVIEW PANEL ===== -->
+  <div id="review-panel" style="display:none;">
+    <h2 id="review-title">&#128203; Please Review Your Information</h2>
+    <p id="review-subtitle">Check each field carefully. Errors are highlighted in red.</p>
+    <table id="review-table"></table>
+    <div id="review-buttons">
+      <button type="button" id="btn-back" onclick="closeReview()">&#8592; Go Back &amp; Edit</button>
+      <button type="button" id="btn-confirm" onclick="confirmSubmit()">&#10003; Confirm &amp; Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<div id="footer">
+  <div id="footer-left">
+    <strong>MedCare<span class="brand-accent">Plus</span></strong><br />
+    PO Box 18881<br />
+    Sugar Land, TX &nbsp;77496
+  </div>
+  <div id="footer-center">
+    <button type="button" id="btn-contact"
+            onclick="alert('Contact us at info@medcareplus.com\nPhone: (713) 555-0100')">
+      &#128231; Contact Us
+    </button>
+  </div>
+  <div id="footer-right">
+    <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
+    <a href="https://www.twitter.com" target="_blank" rel="noopener">Twitter / X</a> |
+    <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</div>
+
+<!-- ===================== INLINE SCRIPTS (date display + DOB min/max) ===================== -->
+<script>
+  // Set today's date display in banner
+  (function() {
+    var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var now    = new Date();
+    var date   = now.getDate();
+    var suffix = "th";
+    if (date===1||date===21||date===31) suffix="st";
+    else if (date===2||date===22) suffix="nd";
+    else if (date===3||date===23) suffix="rd";
+    document.getElementById("dynamic-date").textContent =
+      days[now.getDay()] + ", " + months[now.getMonth()] + " " + date + suffix + ", " + now.getFullYear();
+  })();
+
+  // Set DOB min/max attributes
+  (function() {
+    var today  = new Date();
+    var yyyy   = today.getFullYear();
+    var mm     = String(today.getMonth() + 1).padStart(2, '0');
+    var dd     = String(today.getDate()).padStart(2, '0');
+    var todayStr = yyyy + '-' + mm + '-' + dd;
+    var minStr   = (yyyy - 120) + '-' + mm + '-' + dd;
+    var dobField = document.getElementById('dob');
+    if (dobField) {
+      dobField.setAttribute('max', todayStr);
+      dobField.setAttribute('min', minStr);
+    }
+  })();
+</script>
+<script src="script3.js"></script>
+
+</body>
+</html>
