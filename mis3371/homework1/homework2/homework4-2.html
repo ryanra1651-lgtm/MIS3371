@@ -1,0 +1,752 @@
+<!--
+  Program name: homework4.html
+  Author: Ryan Alexander Rodriguez
+  Date created: 05/06/2026
+  Date last edited: 05/06/2026
+  Version: 4.0
+  Description: MedCare Plus Patient Registration Form – Homework 4.
+               Builds on HW3. Adds:
+               1. Fetch API   – state dropdown loaded from states.html
+               2. iFrame      – embedded CDC health resource in body
+               3. Fixed header & fixed footer (content protection)
+               4. Cookies     – remembers user first name (48hr expiry)
+               5. LocalStorage – saves/restores all non-secure form fields
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCare Plus – Patient Registration (HW4)</title>
+  <link href="style3.css" rel="stylesheet" />
+  <style>
+    /* ── HW4 ADDITIONS ── */
+
+    /* Make room for fixed header + footer */
+    body {
+      padding-top:    88px;
+      padding-bottom: 70px;
+    }
+
+    /* =============================================
+       FIXED HEADER  (Content Protection – method 1)
+       ============================================= */
+    #banner {
+      position:   fixed;
+      top:        0;
+      left:       0;
+      right:      0;
+      z-index:    1000;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.35);
+    }
+
+    /* Welcome / cookie message inside banner */
+    #welcome-msg {
+      font-size:   0.95rem;
+      font-weight: 600;
+      color:       #a5d6a7;
+      line-height: 1.4;
+    }
+    #not-you-line {
+      font-size: 0.78rem;
+      color:     #cfd8dc;
+      margin-top: 2px;
+    }
+    #not-you-line a {
+      color:           #f9c74f;
+      cursor:          pointer;
+      text-decoration: underline;
+    }
+
+    /* =============================================
+       FIXED FOOTER  (Content Protection – method 2)
+       ============================================= */
+    #footer {
+      position:   fixed;
+      bottom:     0;
+      left:       0;
+      right:      0;
+      z-index:    1000;
+      box-shadow: 0 -3px 14px rgba(0,0,0,0.25);
+    }
+
+    /* =============================================
+       iFRAME SECTION
+       ============================================= */
+    #iframe-section {
+      max-width:     1300px;
+      margin:        0 auto 24px;
+      padding:       0 16px;
+    }
+    #iframe-section h2 {
+      font-family:    var(--font-display, 'Playfair Display', serif);
+      font-size:      1.1rem;
+      color:          #1a3c34;
+      margin-bottom:  10px;
+    }
+    #iframe-section p {
+      font-size:   0.82rem;
+      color:       #546e7a;
+      margin-bottom: 8px;
+    }
+    #health-frame {
+      width:         100%;
+      height:        240px;
+      border:        2px solid #b2dfdb;
+      border-radius: 8px;
+      background:    #f9fbe7;
+    }
+
+    /* =============================================
+       REMEMBER ME strip
+       ============================================= */
+    #remember-strip {
+      display:       flex;
+      align-items:   center;
+      gap:           10px;
+      background:    #e8f5e9;
+      border:        1px solid #a5d6a7;
+      border-radius: 8px;
+      padding:       12px 16px;
+      margin-top:    20px;
+    }
+    #remember-strip label {
+      font-weight: 600;
+      font-size:   0.9rem;
+      color:       #1a3c34;
+      cursor:      pointer;
+    }
+
+    /* Toast notification */
+    #toast {
+      position:       fixed;
+      bottom:         78px;
+      left:           50%;
+      transform:      translateX(-50%);
+      background:     #1a3c34;
+      color:          #ffffff;
+      padding:        9px 22px;
+      border-radius:  24px;
+      font-size:      0.88rem;
+      opacity:        0;
+      pointer-events: none;
+      transition:     opacity 0.4s;
+      z-index:        2000;
+      white-space:    nowrap;
+    }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== FIXED BANNER (HW4: fixed header) ===================== -->
+<div id="banner">
+  <div id="banner-left">
+    <svg id="logo" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="28" fill="#ffffff" stroke="#c8e6c9" stroke-width="2"/>
+      <rect x="24" y="12" width="12" height="36" rx="3" fill="#e53935"/>
+      <rect x="12" y="24" width="36" height="12" rx="3" fill="#e53935"/>
+    </svg>
+    <div id="brand-text">
+      <span id="brand-name">MedCare<span class="brand-accent">Plus</span></span>
+      <span id="brand-tagline">Your Health. Our Priority.</span>
+    </div>
+  </div>
+  <div id="banner-right">
+    <!-- HW4: Cookie welcome message injected here by JS -->
+    <div id="welcome-msg">Welcome, New User</div>
+    <div id="not-you-line"></div>
+    <span id="dynamic-date"></span>
+    <span id="banner-sub">Patient Registration Portal</span>
+  </div>
+</div>
+
+<!-- ===================== iFRAME SECTION (HW4: iFrame requirement) ===================== -->
+<div id="iframe-section">
+  <h2>🏥 Patient Health Resources</h2>
+  <p>Explore CDC health resources below while completing your registration.</p>
+  <iframe id="health-frame"
+    src="https://www.cdc.gov/family-health/index.html"
+    title="CDC Family Health Resources"
+    sandbox="allow-scripts allow-same-origin allow-popups allow-forms">
+  </iframe>
+</div>
+
+<!-- ===================== PAGE WRAPPER ===================== -->
+<div id="page-wrapper">
+  <div id="main-content">
+    <h1>New Patient Registration</h1>
+    <p class="form-intro">
+      Please complete all required fields (<span class="req-star">*</span>) accurately.
+      Hover over any field for instructions. Errors are shown <strong>as you type</strong>
+      and must be corrected before you can submit.
+    </p>
+
+    <form id="reg-form" novalidate>
+
+      <!-- ===== PERSONAL INFORMATION ===== -->
+      <h2 class="section-heading">Personal Information</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="firstname">First Name <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="firstname" name="firstname" maxlength="30"
+                   placeholder="First name"
+                   title="Enter your legal first name. Letters, apostrophes, and hyphens only. 1–30 characters."
+                   pattern="[A-Za-z'\-]{1,30}" required
+                   oninput="validateFirstName(); saveField('firstname')"
+                   onblur="validateFirstName(); saveField('firstname')" />
+            <span class="err-msg" id="err-firstname"></span>
+          </td>
+          <td class="label-cell"><label for="middleinit">MI</label></td>
+          <td class="input-cell">
+            <input type="text" id="middleinit" name="middleinit" maxlength="1" size="2"
+                   placeholder="M"
+                   title="Optional. One letter only."
+                   pattern="[A-Za-z]?"
+                   oninput="validateMiddleInit(); saveField('middleinit')"
+                   onblur="validateMiddleInit(); saveField('middleinit')" />
+            <span class="err-msg" id="err-middleinit"></span>
+          </td>
+          <td class="label-cell"><label for="lastname">Last Name <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="lastname" name="lastname" maxlength="30"
+                   placeholder="Last name"
+                   title="Enter your legal last name."
+                   pattern="[A-Za-z'\-]{1,30}" required
+                   oninput="validateLastName(); saveField('lastname')"
+                   onblur="validateLastName(); saveField('lastname')" />
+            <span class="err-msg" id="err-lastname"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="dob">Date of Birth <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="date" id="dob" name="dob"
+                   title="Enter your date of birth." required
+                   onchange="validateDobField(); saveField('dob')"
+                   onblur="validateDobField(); saveField('dob')" />
+            <span class="err-msg" id="err-dob"></span>
+          </td>
+          <td class="label-cell"><label for="ssn">Patient ID # <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="3">
+            <input type="password" id="ssn" name="ssn" maxlength="11"
+                   placeholder="XXX-XX-XXXX"
+                   title="9-digit Patient ID. Dashes inserted automatically."
+                   pattern="\d{3}-\d{2}-\d{4}" required
+                   oninput="formatSSN(this)" onblur="validateSSNField()" />
+            <span class="err-msg" id="err-ssn"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Gender <span class="req-star">*</span></td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="gender" value="Male" required
+              onchange="validateGender(); saveRadio('gender')" /> Male</label>
+            <label class="radio-label"><input type="radio" name="gender" value="Female"
+              onchange="validateGender(); saveRadio('gender')" /> Female</label>
+            <label class="radio-label"><input type="radio" name="gender" value="Non-binary"
+              onchange="validateGender(); saveRadio('gender')" /> Non-binary</label>
+            <label class="radio-label"><input type="radio" name="gender" value="Prefer not to say"
+              onchange="validateGender(); saveRadio('gender')" /> Prefer not to say</label>
+            <span class="err-msg" id="err-gender"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== CONTACT INFORMATION ===== -->
+      <h2 class="section-heading">Contact Information</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="email">Email Address <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="3">
+            <input type="email" id="email" name="email" maxlength="40"
+                   placeholder="name@domain.com"
+                   title="Enter a valid email."
+                   pattern="[^@]+@[^@]+\.[^@]+" required
+                   oninput="validateEmailField(); saveField('email')"
+                   onblur="validateEmailField(); saveField('email')" />
+            <span class="err-msg" id="err-email"></span>
+          </td>
+          <td class="label-cell"><label for="phone">Phone Number</label></td>
+          <td class="input-cell">
+            <input type="tel" id="phone" name="phone" maxlength="14"
+                   placeholder="(XXX) XXX-XXXX"
+                   title="Optional. (XXX) XXX-XXXX format."
+                   pattern="\(\d{3}\) \d{3}-\d{4}"
+                   oninput="formatPhone(this); saveField('phone')"
+                   onblur="validatePhoneField(); saveField('phone')" />
+            <span class="err-msg" id="err-phone"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== ADDRESS ===== -->
+      <h2 class="section-heading">Address</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="addr1">Address Line 1 <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="5">
+            <input type="text" id="addr1" name="addr1" maxlength="30"
+                   placeholder="Street address"
+                   title="2–30 characters required."
+                   pattern=".{2,30}" required
+                   oninput="validateAddr1(); saveField('addr1')"
+                   onblur="validateAddr1(); saveField('addr1')" />
+            <span class="err-msg" id="err-addr1"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="addr2">Address Line 2</label></td>
+          <td class="input-cell" colspan="5">
+            <input type="text" id="addr2" name="addr2" maxlength="30"
+                   placeholder="Apt, Suite, Unit (optional)"
+                   title="Optional. 2–30 characters if entered."
+                   pattern="(.{2,30})?"
+                   oninput="validateAddr2(); saveField('addr2')"
+                   onblur="validateAddr2(); saveField('addr2')" />
+            <span class="err-msg" id="err-addr2"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="city">City <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="city" name="city" maxlength="30"
+                   placeholder="City"
+                   title="2–30 characters required."
+                   pattern=".{2,30}" required
+                   oninput="validateCity(); saveField('city')"
+                   onblur="validateCity(); saveField('city')" />
+            <span class="err-msg" id="err-city"></span>
+          </td>
+          <td class="label-cell"><label for="state">State <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <!-- HW4: Fetch API populates this select from states.html -->
+            <select id="state" name="state"
+                    onchange="validateState(); saveField('state')"
+                    onblur="validateState()">
+              <option value="">Loading states…</option>
+            </select>
+            <span class="err-msg" id="err-state"></span>
+          </td>
+          <td class="label-cell"><label for="zip">Zip Code <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="text" id="zip" name="zip" maxlength="10"
+                   placeholder="XXXXX"
+                   title="5-digit zip code."
+                   pattern="\d{5}(-\d{4})?" required
+                   oninput="validateZip(); saveField('zip')"
+                   onblur="validateZip(); saveField('zip')" />
+            <span class="err-msg" id="err-zip"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== HEALTH HISTORY ===== -->
+      <h2 class="section-heading">Health History &amp; Preferences</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell">Have you been vaccinated? <span class="req-star">*</span></td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="vaccinated" value="Yes" required
+              onchange="validateVaccinated(); saveRadio('vaccinated')" /> Yes</label>
+            <label class="radio-label"><input type="radio" name="vaccinated" value="No"
+              onchange="validateVaccinated(); saveRadio('vaccinated')" /> No</label>
+            <span class="err-msg" id="err-vaccinated"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Do you have insurance? <span class="req-star">*</span></td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="insurance" value="Yes" required
+              onchange="validateInsurance(); saveRadio('insurance')" /> Yes</label>
+            <label class="radio-label"><input type="radio" name="insurance" value="No"
+              onchange="validateInsurance(); saveRadio('insurance')" /> No</label>
+            <span class="err-msg" id="err-insurance"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Do you own or rent?</td>
+          <td class="input-cell" colspan="5">
+            <label class="radio-label"><input type="radio" name="housing" value="Own"
+              onchange="saveRadio('housing')" /> Own</label>
+            <label class="radio-label"><input type="radio" name="housing" value="Rent"
+              onchange="saveRadio('housing')" /> Rent</label>
+            <label class="radio-label"><input type="radio" name="housing" value="Unsure"
+              onchange="saveRadio('housing')" /> Unsure</label>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Previous Conditions<br/><small>(check all that apply)</small></td>
+          <td class="input-cell" colspan="5">
+            <div class="checkbox-group">
+              <label class="radio-label"><input type="checkbox" name="conditions" value="Chicken Pox"
+                onchange="saveCheckboxes('conditions')" /> Chicken Pox</label>
+              <label class="radio-label"><input type="checkbox" name="conditions" value="Measles"
+                onchange="saveCheckboxes('conditions')" /> Measles</label>
+              <label class="radio-label"><input type="checkbox" name="conditions" value="COVID-19"
+                onchange="saveCheckboxes('conditions')" /> COVID-19</label>
+              <label class="radio-label"><input type="checkbox" name="conditions" value="Small Pox"
+                onchange="saveCheckboxes('conditions')" /> Small Pox</label>
+              <label class="radio-label"><input type="checkbox" name="conditions" value="Tetanus"
+                onchange="saveCheckboxes('conditions')" /> Tetanus</label>
+              <label class="radio-label"><input type="checkbox" name="conditions" value="Diabetes"
+                onchange="saveCheckboxes('conditions')" /> Diabetes</label>
+              <label class="radio-label"><input type="checkbox" name="conditions" value="Hypertension"
+                onchange="saveCheckboxes('conditions')" /> Hypertension</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">
+            Pain Level <span class="req-star">*</span><br/><small>(1=none, 10=severe)</small>
+          </td>
+          <td class="input-cell" colspan="5">
+            <div class="slider-wrap">
+              <span class="slider-label">1</span>
+              <input type="range" id="pain_bar" name="pain_bar" min="1" max="10" step="1" value="1"
+                     title="Drag to indicate your current pain level."
+                     oninput="updatePain(this.value); localStorage.setItem('mc_pain_bar', this.value)" />
+              <span class="slider-label">10</span>
+              <span id="pain_val" class="slider-value">1 – No Pain</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">
+            Overall Health Rating <span class="req-star">*</span><br/><small>(1=poor, 10=excellent)</small>
+          </td>
+          <td class="input-cell" colspan="5">
+            <div class="slider-wrap">
+              <span class="slider-label">1</span>
+              <input type="range" id="health_rating" name="health_rating" min="1" max="10" value="5"
+                     title="Rate your overall health."
+                     oninput="document.getElementById('health_val').textContent = this.value; localStorage.setItem('mc_health_rating', this.value)" />
+              <span class="slider-label">10</span>
+              <span id="health_val" class="slider-value">5</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell" style="vertical-align:top;padding-top:10px;">
+            <label for="symptoms">Describe Current Symptoms</label>
+          </td>
+          <td class="input-cell" colspan="5">
+            <textarea id="symptoms" name="symptoms" rows="4" cols="50"
+                      placeholder="Please describe any symptoms you are currently experiencing..."
+                      title='Optional. Describe your symptoms.'
+                      oninput="validateSymptoms(); saveField('symptoms')"
+                      onblur="validateSymptoms(); saveField('symptoms')"></textarea>
+            <span class="err-msg" id="err-symptoms"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== ACCOUNT CREDENTIALS ===== -->
+      <h2 class="section-heading">Account Credentials</h2>
+      <table class="form-table">
+        <tr>
+          <td class="label-cell"><label for="userid">Desired User ID <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="5">
+            <input type="text" id="userid" name="userid" maxlength="20"
+                   placeholder="Choose a username (5–20 chars)"
+                   title="5–20 characters. Must start with a letter."
+                   pattern="[A-Za-z][A-Za-z0-9_\-]{4,19}" required
+                   oninput="this.value = this.value.toLowerCase(); validateUserID(); saveField('userid')"
+                   onblur="validateUserID(); saveField('userid')" />
+            <span class="err-msg" id="err-userid"></span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell"><label for="password">Password <span class="req-star">*</span></label></td>
+          <td class="input-cell">
+            <input type="password" id="password" name="password" maxlength="30"
+                   placeholder="••••••••"
+                   title="8–30 characters. Must include uppercase, lowercase, and a digit."
+                   required
+                   oninput="validatePasswords()" onblur="validatePasswords()" />
+            <span class="err-msg" id="err-password"></span>
+          </td>
+          <td class="label-cell"><label for="password2">Confirm Password <span class="req-star">*</span></label></td>
+          <td class="input-cell" colspan="3">
+            <input type="password" id="password2" name="password2" maxlength="30"
+                   placeholder="••••••••"
+                   title="Re-enter your password."
+                   required
+                   oninput="validatePasswords()" onblur="validatePasswords()" />
+            <span class="err-msg" id="err-password2"></span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- ===== HW4: REMEMBER ME (Cookie + LocalStorage control) ===== -->
+      <div id="remember-strip">
+        <input type="checkbox" id="rememberMe" checked />
+        <label for="rememberMe">🔒 Remember Me – Save my info for my next visit (cookies + local storage)</label>
+      </div>
+
+      <!-- ===== BUTTONS ===== -->
+      <div id="form-buttons">
+        <input type="reset" id="btn-reset" value="CLEAR AND START OVER"
+               title="Clear all fields and start over." onclick="clearForm()" />
+        <button type="button" id="btn-review"
+                title="Review your entered information before submitting."
+                onclick="reviewForm()">&#128203; Review My Information</button>
+        <button type="button" id="btn-validate"
+                title="Validate all fields."
+                onclick="runValidateAll()">&#10003; VALIDATE</button>
+        <button type="button" id="btn-submit" style="display:none;"
+                title="Submit your registration."
+                onclick="submitForm()">&#128229; SUBMIT REGISTRATION</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ===== REVIEW PANEL ===== -->
+  <div id="review-panel" style="display:none;">
+    <h2 id="review-title">&#128203; Please Review Your Information</h2>
+    <p id="review-subtitle">Check each field carefully. Errors are highlighted in red.</p>
+    <table id="review-table"></table>
+    <div id="review-buttons">
+      <button type="button" id="btn-back" onclick="closeReview()">&#8592; Go Back &amp; Edit</button>
+      <button type="button" id="btn-confirm" onclick="confirmSubmit()">&#10003; Confirm &amp; Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FIXED FOOTER (HW4: fixed footer) ===================== -->
+<div id="footer">
+  <div id="footer-left">
+    <strong>MedCare<span class="brand-accent">Plus</span></strong><br />
+    PO Box 18881<br />
+    Sugar Land, TX &nbsp;77496
+  </div>
+  <div id="footer-center">
+    <button type="button" id="btn-contact"
+            onclick="alert('Contact us at info@medcareplus.com\nPhone: (713) 555-0100')">
+      &#128231; Contact Us
+    </button>
+  </div>
+  <div id="footer-right">
+    <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a> |
+    <a href="https://www.twitter.com" target="_blank" rel="noopener">Twitter / X</a> |
+    <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ===================== INLINE SCRIPTS ===================== -->
+<script>
+  // Set today's date display in banner
+  (function() {
+    var days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var now    = new Date();
+    var date   = now.getDate();
+    var suffix = "th";
+    if (date===1||date===21||date===31) suffix="st";
+    else if (date===2||date===22) suffix="nd";
+    else if (date===3||date===23) suffix="rd";
+    document.getElementById("dynamic-date").textContent =
+      days[now.getDay()] + ", " + months[now.getMonth()] + " " + date + suffix + ", " + now.getFullYear();
+  })();
+
+  // Set DOB min/max
+  (function() {
+    var today  = new Date();
+    var yyyy   = today.getFullYear();
+    var mm     = String(today.getMonth() + 1).padStart(2, '0');
+    var dd     = String(today.getDate()).padStart(2, '0');
+    var todayStr = yyyy + '-' + mm + '-' + dd;
+    var minStr   = (yyyy - 120) + '-' + mm + '-' + dd;
+    var dobField = document.getElementById('dob');
+    if (dobField) {
+      dobField.setAttribute('max', todayStr);
+      dobField.setAttribute('min', minStr);
+    }
+  })();
+</script>
+
+<!-- ===================== HW4 JAVASCRIPT ===================== -->
+<script>
+/* ────────────────────────────────────────────
+   TOAST HELPER
+──────────────────────────────────────────── */
+function showToast(msg, dur) {
+  dur = dur || 3000;
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, dur);
+}
+
+/* ────────────────────────────────────────────
+   COOKIE HELPERS
+──────────────────────────────────────────── */
+function setCookie(name, value, hours) {
+  var exp = new Date(Date.now() + hours * 3600 * 1000).toUTCString();
+  document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + exp + ';path=/';
+}
+function getCookie(name) {
+  var match = document.cookie.split('; ').find(function(r){ return r.startsWith(name + '='); });
+  return match ? decodeURIComponent(match.split('=')[1]) : null;
+}
+function deleteCookie(name) {
+  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+}
+
+/* ────────────────────────────────────────────
+   HW4 COOKIE LOGIC – runs on page load
+──────────────────────────────────────────── */
+(function initCookie() {
+  var firstName   = getCookie('medcare_firstname');
+  var welcomeEl   = document.getElementById('welcome-msg');
+  var notYouEl    = document.getElementById('not-you-line');
+
+  if (firstName) {
+    // Returning user
+    welcomeEl.textContent = 'Welcome back, ' + firstName + '! \uD83D\uDC4B';
+    notYouEl.innerHTML = 'Not ' + firstName + '? <a onclick="startAsNewUser()">Click here to start as a New User</a>';
+    // Pre-fill first name
+    document.getElementById('firstname').value = firstName;
+    // Load all local storage data back into form
+    loadFromLocalStorage();
+  } else {
+    welcomeEl.textContent = 'Welcome, New User \uD83D\uDC4B';
+  }
+})();
+
+function startAsNewUser() {
+  deleteCookie('medcare_firstname');
+  localStorage.clear();
+  clearForm();
+  document.getElementById('welcome-msg').textContent = 'Welcome, New User \uD83D\uDC4B';
+  document.getElementById('not-you-line').innerHTML = '';
+  showToast('Cookie cleared. Starting fresh!');
+}
+
+/* ────────────────────────────────────────────
+   HW4 REMEMBER ME CHECKBOX
+──────────────────────────────────────────── */
+document.getElementById('rememberMe').addEventListener('change', function() {
+  if (!this.checked) {
+    deleteCookie('medcare_firstname');
+    localStorage.clear();
+    showToast('Cookie & saved data cleared.');
+  }
+});
+
+/* ────────────────────────────────────────────
+   HW4 LOCAL STORAGE – save helpers
+──────────────────────────────────────────── */
+function isRememberChecked() {
+  return document.getElementById('rememberMe').checked;
+}
+
+function saveField(id) {
+  if (!isRememberChecked()) return;
+  var el = document.getElementById(id);
+  if (!el) return;
+  localStorage.setItem('mc_' + id, el.value);
+  // Also set cookie when first name is saved
+  if (id === 'firstname' && el.value.trim()) {
+    setCookie('medcare_firstname', el.value.trim(), 48);
+  }
+}
+
+function saveRadio(name) {
+  if (!isRememberChecked()) return;
+  var sel = document.querySelector('input[name="' + name + '"]:checked');
+  if (sel) localStorage.setItem('mc_radio_' + name, sel.value);
+}
+
+function saveCheckboxes(name) {
+  if (!isRememberChecked()) return;
+  var checked = Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(function(c){ return c.value; });
+  localStorage.setItem('mc_cb_' + name, checked.join(','));
+}
+
+/* ────────────────────────────────────────────
+   HW4 LOCAL STORAGE – load all fields back
+──────────────────────────────────────────── */
+function loadFromLocalStorage() {
+  var textFields = ['firstname','middleinit','lastname','dob','email','phone','addr1','addr2','city','zip','userid','symptoms'];
+  textFields.forEach(function(id) {
+    var val = localStorage.getItem('mc_' + id);
+    var el  = document.getElementById(id);
+    if (val && el) el.value = val;
+  });
+
+  // Sliders
+  var painVal = localStorage.getItem('mc_pain_bar');
+  if (painVal) {
+    document.getElementById('pain_bar').value = painVal;
+    updatePain(painVal);
+  }
+  var healthVal = localStorage.getItem('mc_health_rating');
+  if (healthVal) {
+    document.getElementById('health_rating').value = healthVal;
+    document.getElementById('health_val').textContent = healthVal;
+  }
+
+  // Radios
+  ['gender','vaccinated','insurance','housing'].forEach(function(name) {
+    var val = localStorage.getItem('mc_radio_' + name);
+    if (val) {
+      var rb = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+      if (rb) rb.checked = true;
+    }
+  });
+
+  // Checkboxes
+  var condVal = localStorage.getItem('mc_cb_conditions');
+  if (condVal && condVal.length > 0) {
+    condVal.split(',').forEach(function(v) {
+      var cb = document.querySelector('input[name="conditions"][value="' + v + '"]');
+      if (cb) cb.checked = true;
+    });
+  }
+
+  // State dropdown – defer until Fetch has populated it
+  var stateVal = localStorage.getItem('mc_state');
+  if (stateVal) {
+    setTimeout(function() {
+      var sel = document.getElementById('state');
+      if (sel) sel.value = stateVal;
+    }, 1000);
+  }
+}
+
+// Save state on change
+document.getElementById('state').addEventListener('change', function() {
+  if (isRememberChecked()) localStorage.setItem('mc_state', this.value);
+});
+
+/* ────────────────────────────────────────────
+   HW4 FETCH API – load state options from states.html
+──────────────────────────────────────────── */
+(async function loadStates() {
+  try {
+    var response = await fetch('states.html');
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    var html     = await response.text();
+    var stateEl  = document.getElementById('state');
+    stateEl.innerHTML = html;
+    // Restore saved state if any
+    var saved = localStorage.getItem('mc_state');
+    if (saved) stateEl.value = saved;
+    showToast('✅ State list loaded via Fetch API');
+  } catch (err) {
+    console.error('Fetch error:', err);
+    document.getElementById('state').innerHTML = '<option value="">-- Could not load states --</option>';
+  }
+})();
+</script>
+
+<!-- Original HW3 script (all existing validation functions) -->
+<script src="script3.js"></script>
+
+</body>
+</html>
